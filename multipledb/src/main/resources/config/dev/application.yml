@@ -1,0 +1,117 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /multipledb
+mybatis-plus:
+  # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
+  # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.marktoday.multipledb.entity
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 0
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 2
+    #驼峰下划线转换
+    db-column-underline: true
+    #mp2.3+ 全局表前缀 mp_
+    #table-prefix: mp_
+    #刷新mapper 调试神器
+    refresh-mapper: true
+    #数据库大写下划线转换
+    #capital-mode: true
+    #逻辑删除配置（下面3个配置）
+    logic-delete-value: 4
+    logic-not-delete-value: 0
+  configuration:
+    #配置返回数据库(column下划线命名&&返回java实体是驼峰命名)，自动匹配无需as（没开启这个，SQL需要写as： select user_id as userId）
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    #配置JdbcTypeForNull, oracle数据库必须配置
+    jdbc-type-for-null: 'null'
+spring:
+  application:
+    name: marktoday_demo
+  datasource:
+    druid:
+      type: com.alibaba.druid.pool.DruidDataSource
+      #MySQL数据源1
+      db1:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql:///test01?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull&nullCatalogMeansCurrent=true
+        username: root
+        password: root
+
+        #连接池最大连接数（使用负值表示没有限制）
+        max-total: 200
+        # 初始化配置
+        initial-size: 3
+        # 最小连接数
+        min-idle: 3
+        # 最大连接数
+        max-active: 15
+        # 获取连接超时时间
+        max-wait: 5000
+        # 连接有效性检测时间
+        time-between-eviction-runs-millis: 60000
+        # 最大空闲时间
+        min-evictable-idle-time-millis: 300000
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+
+        validation-query: select 1
+        # 配置监控统计拦截的filters
+        filters: stat
+        stat-view-servlet:
+          url-pattern: /druid/*
+          reset-enable: false
+
+        web-stat-filter:
+          url-pattern: /*
+          exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+      #MySQL数据源2
+      #db2:
+      #  username: root
+      #  password: root
+      #  driverClassName: com.mysql.jdbc.Driver
+      #  url: jdbc:mysql:///test02?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull&nullCatalogMeansCurrent=true
+      #  initialSize: 5
+      #  minIdle: 5
+      #  maxActive: 20
+      #Oracle数据源
+      db2:
+        driverClassName: oracle.jdbc.OracleDriver
+        url: jdbc:oracle:thin:@yourIP:xxx
+        username: xxx
+        password: xxx
+        # 初始化连接大小
+        initial-size: 5
+        # 最小空闲连接数
+        min-idle: 5
+        max-active: 15
+        max-wait: 30000
+        # 可关闭的空闲连接间隔时间
+        time-between-eviction-runs-millis: 60000
+        # 配置连接在池中的最小生存时间
+        min-evictable-idle-time-millis: 300000
+        validation-query: select '1' from dual
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+        # 打开PSCache，并且指定每个连接上PSCache的大小
+        pool-prepared-statements: true
+        max-open-prepared-statements: 20
+        max-pool-prepared-statement-per-connection-size: 20
+        # 配置监控统计拦截的filters
+        filters: stat
+
+        stat-view-servlet:
+          url-pattern: /druid/*
+          reset-enable: false
+
+        web-stat-filter:
+          url-pattern: /*
+          exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+
